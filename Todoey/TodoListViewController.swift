@@ -10,10 +10,15 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
+    let defaults = UserDefaults.standard
     var itemArray = ["Find Mike", "Buy eggos", "Destroy Demogorgon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
     }
 
     
@@ -51,7 +56,6 @@ class TodoListViewController: UITableViewController {
     
     //MARK - Add New Items
     
-    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         // Handles adding new a Todo Item.
         
@@ -63,6 +67,9 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // Append user entry into array of Todos.
             self.itemArray.append(textField.text!)
+            
+            // Persist TodoList array.
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             
             // Reload data.
             self.tableView.reloadData()
